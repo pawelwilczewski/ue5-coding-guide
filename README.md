@@ -9,10 +9,12 @@ This document summarizes the high-level coding conventions for writing Unreal En
 
 1.2. __DO__ add a prefix to all class and struct names, based on your project name.
 
+    Suggestion: use ProjectNameAbbreviation_TypeName, i.e. AMFPS_InventoryItem for type InventoryItem deriving from Actor in project ModularFPS.
+
 
 ## 2. Files
 
-2.1. __DO__ use PascalCase for file names, with the project name prefix, but without the type prefix (e.g. `AHOATCharacter` goes into `HOATCharacter.h`).
+2.1. __DO__ use PascalCase for file names, with the project name prefix, but without the type prefix (e.g. `AHOAT_Character` goes into `HOAT_Character.h`).
 
 2.2. __DO__ write header files with the following structure:
 
@@ -31,8 +33,6 @@ This document summarizes the high-level coding conventions for writing Unreal En
 * public `override` functions (e.g. `BeginPlay`, `Tick`, `GetLifetimeReplicatedProps`)
 * public functions
 * public event handlers
-  * `virtual void Notify...` functions
-  * `UFUNCTION(BlueprintImplementableEvent) void Receive...` functions
   * `UPROPERTY(BlueprintAssignable)` delegate properties
 * operators
 * public constants
@@ -49,7 +49,7 @@ Within each of these groups, order members by name or logical groups.
 
 2.4. __DO NOT__ cover more than a single feature in each file. Don't define more than one public type per file.
 
-2.5. __DO__ leave a blank line at the end of the file to play nice with gcc. 
+2.5. __DO__ leave a blank line at the end of the file to play nice with gcc.
 
 
 ## 3. Includes
@@ -336,7 +336,7 @@ Within each of these groups, order members by name or logical groups.
 
 ## 14. Language Features
 
-14.1. __CONSIDER__ using the `auto` keyword when it avoids repetition of a type in the same statement, or when assigning iterator types. If in doubt, for example if using `auto` could make the code less readable, do not use `auto`.
+14.1. __DO__ use the `auto` keyword whenever convenient.
 
       auto* HealthComponent = FindComponentByClass<UHOATHealthComponent>();
 
@@ -344,39 +344,61 @@ Within each of these groups, order members by name or logical groups.
 
 14.3. __DO__ use proprietary types, such as `TArray` or `TMap` where possible. This avoids unnecessary and repeated type conversion while interacting with the Unreal Engine APIs.
 
-14.4. __DO__ use the `TEXT()` macro around string literals. Without it, code which constructs `FString`s from literals will cause an undesirable string conversion process. 
+14.4. __DO__ use the `TEXT()` macro around string literals. Without it, code that constructs `FString`s from literals will cause an undesirable string conversion process. 
 
 ## 15. Events & Delegates
 
-15.1. __CONSIDER__ exposing meaningful events to subclasses and/or other interested listeners by defining virtual functions and/or multicast delegates.
+15.1. __DO__ expose meaningful events to subclasses and/or other interested listeners by defining virtual functions and/or multicast delegates.
 
-15.2. __DO__ define two functions when exposing an event to a subclass. The first function should be virtual and its name should begin with `Notify`. The second function should be a `BlueprintImplementableEvent UFUNCTION` and its name should begin with `Receive`. The default implementation of the virtual function should be to call the `BlueprintImplementableEvent` function (see `AActor::NotifyActorBeginOverlap` and `AActor::ReceiveActorBeginOverlap` for example).
+15.2. _REMOVED RULE_
 
-15.3. __DO__ call the virtual function before broadcasting the event, if both are defined (see `UPrimitiveComponent::BeginComponentOverlap` for example).
+15.3. _REMOVED RULE_
 
-Example:
+15.4. __CONSIDER__ Events are preferred in general, but events can't be exposed to Blueprints - and prefer to expose!
 
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHoatActorGraphConnectivityChangedSignature, AActor*, Source, AActor*, Target, float, Distance);
+15.5. __DO__ always declare delegate properties as `BlueprintAssignable` (consider using events otherwise).
 
-    /** Event when the connectivity of an observed source vertex has changed. */
-    virtual void NotifyOnConnectivityChanged(AActor* Source, AActor* Target, float Distance);
+15.6. __DO__ declare the event/delegate signature first and the event directly below it.
 
-    /** Event when the connectivity of an observed source vertex has changed. */
-    UFUNCTION(BlueprintImplementableEvent, Category = Graph, meta = (DisplayName = "OnConnectivityChanged"))
-    void ReceiveOnConnectivityChanged(AActor* Source, AActor* Target, float Distance);
+15.7. __CONSIDER__ preferably, don't use the same signature for different events - it's only recommended when it's certain that all events using that signature will always need to be updated whenever that signature is changed.
 
-    /** Event when the connectivity of an observed source vertex has changed. */
+15.8. __DO__ use events specifiers that are supported by Blueprints (almost always `BlueprintNativeEvent`, sometimes `BlueprintImplementable`).
+
+15.9. __DO__ prefix event/delegate property names with `On`.
+
+15.10. __DO__ prefix event/delegate subscriber functions with `Handle`.
+
+15.11. __DO__ use events instead of delegates if the functionality is not to be exposed to Blueprints.
+
+15.12. __DO NOT__ use `Broadcast()`, `IsBound()` and `Clear()` on delegates outside of the class they are defined in! Pretend delegates are just events that are compatible with Blueprints.
+
+15.13. __DO NOT__ use getters for event/delegate properties - expose them as needed (probably public).
+
+15.14. __DO__ often add reference to the object that the event is part of (most likely `this`) in the signature of the event. For example, `InventoryUI` subscribes to multiple items' `OnDropped` - access to which exact item was dropped may be useful.
+
+15.15 __DO__ unsubscribe from events/delegates when no longer needed - often in destructors.
+
+Declaration example:
+
+    public:
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPickedUpSignature, AMFPS_InventoryItem *, InventoryItem, AActor *, PickedBy);
     UPROPERTY(BlueprintAssignable)
-    FHoatActorGraphConnectivityChangedSignature OnConnectivityChanged;
+    FPickedUpSignature OnPickedUp;
+   
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDroppedSignature, AMFPS_InventoryItem *, InventoryItem);
+    UPROPERTY(BlueprintAssignable)
+    FDroppedSignature OnDropped;
 
+    DECLARE_EVENT(FEquippedSignature)
+	   FEquippedSignature OnEquipped;
 
-    void AHoatActorGraph::NotifyOnConnectivityChanged(AActor* Source, AActor* Target, float Distance)
+Subscription example:
+
+    OnPickedUp.AddUniqueDynamic(this, HandleItemPickedUp);
+
+    void AMFPS_InventoryUI::HandleItemPickedUp(AMFPS_InventoryItem *InventoryItem, AActor *PickedUpBy)
     {
-    ReceiveOnConnectivityChanged(Source, Target, Distance);
-    OnConnectivityChanged.Broadcast(Source, Target, Distance);
-
-    HOAT_LOG(hoat, Log, TEXT("%s changed the connectivity of vertex %s: Distance to target %s changed to %f."),
-            *GetName(), *Source->GetName(), *Target->GetName(), Distance);
+        // do something with the picked up item
     }
 
 ## 16. Comments
