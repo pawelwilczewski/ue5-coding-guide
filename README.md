@@ -1,12 +1,6 @@
-# Unreal 4 Coding Conventions 1.0
+# UE5 Coding Conventions
 
-This document summarizes the high-level coding conventions for writing Unreal 4 client code at Daedalic Entertainment. They are based on the official Unreal Coding Standard:
-
-* https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/index.html
-
-The goal is to make it easier to work in similar teams inside and outside the company, as well as have client code blend in with other code of the Unreal API. We are providing a complete summary here in order to allow people to understand the conventions at a glance, instead of having to open multiple documents. Our coding conventions are numbered, which makes it easier to refer to them in code reviews.
-
-In case we've missed recent changes to the official Unreal Coding Standard, or you can spot any other issue, please [create a pull request](https://help.github.com/articles/creating-a-pull-request/).
+This document summarizes the high-level coding conventions for writing Unreal Engine 5 code based on the official [Unreal Coding Standard](https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/index.html).
 
 
 ## 1. Namespaces
