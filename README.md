@@ -9,7 +9,7 @@ This document summarizes the high-level coding conventions for writing Unreal En
 
 1.2. __DO__ add a prefix to all class and struct names, based on your project name.
 
-_Suggestion: use `ProjectNameAbbreviation_TypeName`, i.e. `AMFPS_InventoryItem` for type `InventoryItem` deriving from `Actor` in project `ModularFPS`._
+_Suggestion: use `EnginePrefixProjectNameAbbreviation_TypeName`, i.e. `AMFPS_InventoryItem` for type `InventoryItem` deriving from `Actor` (engine prefix) in project `ModularFPS`._
 
 ## 2. Files
 
