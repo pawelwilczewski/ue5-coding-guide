@@ -11,6 +11,7 @@ This document summarizes the high-level coding conventions for writing Unreal En
 
 _Suggestion: use `EnginePrefixProjectNameAbbreviation_TypeName`, i.e. `AMFPS_InventoryItem` for type `InventoryItem` deriving from `Actor` (engine prefix) in project `ModularFPS`._
 
+
 ## 2. Files
 
 2.1. __DO__ use PascalCase for file names, with the project name prefix, but without the type prefix (e.g. `AHOAT_Character` goes into `HOAT_Character.h`).
@@ -155,13 +156,26 @@ Within each of these groups, order members by name or logical groups.
 * `double` for double precision floating point (8 bytes). 
 * `PTRINT` for an integer that may hold a pointer (_never_ assume the size of `PTRINT`). 
 
-7.6. __DO__ put a single space between the `*` or `&` and the variable name for pointers or references, and don't put a space between the type and `*` or `&`. For us, the fact that we are declaring a pointer or reference variable here much more belongs to the type of the variable than to its name:
+7.6. __DO__ put a single space between the type and `*` or `&` pointers or references, and don't put a space between `*` or `&` and the name.
 
-      AController* Instigator
-      const FDamageEvent& DamageEvent
+      AController *Instigator
+      const FDamageEvent &DamageEvent
 
 7.7. __DO__ test whether a pointer is valid before dereferencing it. `nullptr` should be used instead of the C-style `NULL` macro in all cases. If the pointer points to any `UOBJECT`, use `IsValid` to ensures the pointer is not null and the referenced object is not marked for destruction.
 
+7.8 Whenever declaring properties, use the following signature by default. For deriving the category, refer to rule 17.2.
+
+    // for read-only properties:
+    // consider VisibleAnywhere/VisibleDefaultsOnly/VisibleInstanceOnly
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SomeCategory", meta = (AllowPrivateAccess = true))
+    int32 SomeInteger = 0;
+
+    // for read/write properties:
+    // consider EditAnywhere/EditDefaultsOnly/EditInstanceOnly
+    // consider BlueprintReadOnly/BlueprintReadWrite
+    // NOTE: if BlueprintReadWrite is used, we don't need to use Edit specifiers but can/should use Visible instead
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SomeCategory")
+    int32 SomeInteger = 0;
 
 ## 8. Enums & Constants
 
@@ -415,3 +429,5 @@ Subscription example:
 ## 17. Additional Naming Conventions
 
 17.1. __DO NOT__ use any swearing in symbol names, comments or log output.
+
+17.2. __DO__ derive categories for exposed properties/functions from the path to the file and file, i.e. `ModularFPS/Inventory/Item/MFPS_InventoryItem` as a category would become `ModularFPS|Inventory|Item|InventoryItem`.
