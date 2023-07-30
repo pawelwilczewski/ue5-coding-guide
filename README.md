@@ -163,19 +163,24 @@ Within each of these groups, order members by name or logical groups.
 
 7.7. __DO__ test whether a pointer is valid before dereferencing it. `nullptr` should be used instead of the C-style `NULL` macro in all cases. If the pointer points to any `UOBJECT`, use `IsValid` to ensures the pointer is not null and the referenced object is not marked for destruction.
 
-7.8 Whenever declaring properties, use the following signature by default. For deriving the category, refer to rule 17.2.
+7.8. Whenever declaring properties, use the following signature by default. For deriving the category, refer to rule 17.2.
 
-    // for read-only properties:
+7.8.1. Read-only properties:
+
     // consider VisibleAnywhere/VisibleDefaultsOnly/VisibleInstanceOnly
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SomeCategory", meta = (AllowPrivateAccess = true))
     int32 SomeInteger = 0;
 
-    // for read/write properties:
+7.8.2. Read-write properties:
+
     // consider EditAnywhere/EditDefaultsOnly/EditInstanceOnly
     // consider BlueprintReadOnly/BlueprintReadWrite
     // NOTE: if BlueprintReadWrite is used, we don't need to use Edit specifiers but can/should use Visible instead
+    
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SomeCategory")
     int32 SomeInteger = 0;
+
 
 ## 8. Enums & Constants
 
