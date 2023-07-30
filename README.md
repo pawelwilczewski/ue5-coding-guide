@@ -147,7 +147,7 @@ Within each of these groups, order members by name or logical groups.
 * `uint8` for unsigned bytes (1 byte). 
 * `int8` for signed bytes (1 byte). 
 * `uint16` for unsigned "shorts" (2 bytes). 
-* `int1` for signed "shorts" (2 bytes). 
+* `int16` for signed "shorts" (2 bytes). 
 * `uint32` for unsigned ints (4 bytes). 
 * `int32` for signed ints (4 bytes). 
 * `uint64` for unsigned "quad words" (8 bytes). 
