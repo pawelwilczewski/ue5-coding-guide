@@ -197,14 +197,17 @@ Within each of these groups, order members by name or logical groups.
 
 10.2. __DO__ use a new line for the body of a control flow statement:
 
-      // Right:
+      // right:
       if (bVisible)
       {
           Hide();
       }
 
-      // Wrong:
+      // wrong:
       if (bVisible) Hide();
+
+      // NOTE: it's fine to inline a control flow operator
+      if (bVisible) return;
 
 10.3. __DO__ start operators at the beginning of the new lines.
 
