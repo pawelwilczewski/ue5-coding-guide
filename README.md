@@ -356,19 +356,19 @@ Within each of these groups, order members by name or logical groups.
 
 15.4. __CONSIDER__ events are preferred in general, but events can't be exposed to Blueprints - and prefer to expose!
 
-15.5. __DO__ always declare delegate properties as `BlueprintAssignable` (consider using events otherwise).
+15.5. __DO__ use events instead of delegates if the functionality is not to be exposed to Blueprints.
 
-15.6. __DO__ declare the event/delegate signature first and the event directly below it.
+15.6. __DO__ always declare delegate properties as `BlueprintAssignable` (consider using events otherwise).
 
-15.7. __CONSIDER__ preferably, don't use the same signature for different events - it's only recommended when it's certain that all events using that signature will always need to be updated whenever that signature is changed.
+15.7. __DO__ declare the event/delegate signature first and the event directly below it.
 
-15.8. __DO__ use events specifiers that are supported by Blueprints (almost always `BlueprintNativeEvent`, sometimes `BlueprintImplementable`).
+15.8. __CONSIDER__ preferably, don't use the same signature for different events - it's only recommended when it's certain that all events using that signature will always need to be updated whenever that signature is changed.
 
-15.9. __DO__ prefix event/delegate property names with `On`.
+15.9. __DO__ use events specifiers that are supported by Blueprints (almost always `BlueprintNativeEvent`, sometimes `BlueprintImplementable`).
 
-15.10. __DO__ prefix event/delegate subscriber functions with `Handle`.
+15.10. __DO__ prefix event/delegate property names with `On` and use past tense for the action described i.e. `OnDamaged`.
 
-15.11. __DO__ use events instead of delegates if the functionality is not to be exposed to Blueprints.
+15.11. __DO__ prefix event/delegate subscriber functions with `Handle`.
 
 15.12. __DO NOT__ use `Broadcast()`, `IsBound()` and `Clear()` on delegates outside of the class they are defined in! Pretend delegates are just events that are compatible with Blueprints.
 
