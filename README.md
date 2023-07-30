@@ -354,7 +354,7 @@ Within each of these groups, order members by name or logical groups.
 
 15.3. _REMOVED RULE_
 
-15.4. __CONSIDER__ Events are preferred in general, but events can't be exposed to Blueprints - and prefer to expose!
+15.4. __CONSIDER__ events are preferred in general, but events can't be exposed to Blueprints - and prefer to expose!
 
 15.5. __DO__ always declare delegate properties as `BlueprintAssignable` (consider using events otherwise).
 
