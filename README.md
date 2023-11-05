@@ -383,7 +383,7 @@ Within each of these groups, order members by name or logical groups.
 
 15.7. __DO__ declare the event/delegate signature first and the event directly below it.
 
-15.8. __CONSIDER__ preferably, don't use the same signature for different events - it's only recommended when it's certain that all events using that signature will always need to be updated whenever that signature is changed.
+15.8. __CONSIDER__ not using the same signature struct for different events - it's only recommended when it's certain that all events using that signature will always need to be updated whenever that signature is changed.
 
 15.9. __DO__ use events specifiers that are supported by Blueprints (almost always `BlueprintNativeEvent`, sometimes `BlueprintImplementable`).
 
@@ -402,16 +402,16 @@ Within each of these groups, order members by name or logical groups.
 Declaration example:
 
     public:
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPickedUpSignature, AMFPS_InventoryItem *, InventoryItem, AActor *, PickedBy);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPickedUpSignature, AMFPS_InventoryItem *, InventoryItem, AActor *, PickedUpBy);
     UPROPERTY(BlueprintAssignable)
-    FPickedUpSignature OnPickedUp;
-   
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDroppedSignature, AMFPS_InventoryItem *, InventoryItem);
-    UPROPERTY(BlueprintAssignable)
-    FDroppedSignature OnDropped;
+    FOnPickedUpSignature OnPickedUp;
 
-    DECLARE_EVENT(FEquippedSignature)
-	   FEquippedSignature OnEquipped;
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDroppedSignature, AMFPS_InventoryItem *, InventoryItem);
+    UPROPERTY(BlueprintAssignable)
+    FOnDroppedSignature OnDropped;
+
+    DECLARE_EVENT(FOnEquippedSignature)
+    FOnEquippedSignature OnEquipped;
 
 Subscription example:
 
